@@ -1,0 +1,54 @@
+def dls(state, goal, limit, path, visited):
+    if state == goal:
+        return path + [state]
+
+    if limit == 0:
+        return None
+
+    visited.add(state)
+    zero = state.index(0)
+    r, c = divmod(zero, 3)
+
+    for dr, dc in [(1, 0), (-1, 0),
+                   (0, 1), (0, -1)]:
+        nr, nc = r + dr, c + dc
+
+        if 0 <= nr < 3 and 0 <= nc < 3:
+            pos = nr * 3 + nc
+            new = list(state)
+            new[zero], new[pos] = new[pos], new[zero]
+            new = tuple(new)
+
+            if new not in visited:
+                result = dls(new, goal, limit - 1,
+                             path + [state], visited)
+                if result:
+                    return result
+
+    return None
+
+
+def ids(start, goal, max_depth=30):
+    for depth in range(max_depth + 1):
+        result = dls(start, goal, depth, [], set())
+        if result:
+            return result
+    return None
+
+
+start = (1, 2, 3, 0, 4, 6, 7, 5, 8)
+goal = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+result = ids(start, goal)
+
+if result:
+    for state in result:
+        print(state[:3])
+        print(state[3:6])
+        print(state[6:])
+        print()
+else:
+    print("Solution not found")
+
+print("Name: Chetali Kabra")
+print("USN: 1WA24CS093")
